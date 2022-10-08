@@ -1,0 +1,35 @@
+version: "2"
+
+services:
+  database:
+    image: mysql:8-oracle
+    ports:
+      - "3306:3306"
+    networks:
+      - backend-network
+    volumes:
+      - "vol_db_mysql:/var/opt/mysql"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=country_calling_codes_db
+
+  backend:
+    image: backend
+    build:
+      context: ../backend
+      dockerfile: ../backend/Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - spring.profiles.active=prod
+      - spring.datasource.url=jdbc:mysql://database:3306/country_calling_codes_db?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true
+    networks:
+      - backend-network
+    depends_on:
+      - database
+
+networks:
+  backend-network:
+
+volumes:
+  vol_db_mysql:
