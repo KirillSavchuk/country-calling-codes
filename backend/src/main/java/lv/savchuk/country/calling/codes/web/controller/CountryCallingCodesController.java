@@ -3,6 +3,7 @@ package lv.savchuk.country.calling.codes.web.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lv.savchuk.country.calling.codes.api.CountryCallingCodesService;
 import lv.savchuk.country.calling.codes.exception.CountryCallingCodeNotFoundException;
+import lv.savchuk.country.calling.codes.exception.CountryCallingCodesNotInitializedException;
 import lv.savchuk.country.calling.codes.model.CountryCallingCodes;
 import lv.savchuk.country.calling.codes.service.mapper.Mapper;
 import lv.savchuk.country.calling.codes.service.mapper.MapperFactory;
@@ -28,18 +29,19 @@ public class CountryCallingCodesController {
     public CountryCallingCodesController(CountryCallingCodesService countryCallingCodesService, MapperFactory mapperFactory) {
         this.countryCallingCodesService = countryCallingCodesService;
         this.phoneNumberValidateResponseMapper = mapperFactory.getMapperFor(CountryCallingCodes.class, PhoneNumberValidateResponse.class);
-        ;
     }
 
     @GetMapping("/list")
     @Operation(summary = "Get All Country Calling Codes")
-    public ResponseEntity<List<CountryCallingCodes>> getAll() {
+    public ResponseEntity<List<CountryCallingCodes>> getAll()
+            throws CountryCallingCodesNotInitializedException {
         return ResponseEntity.ok(countryCallingCodesService.getAll());
     }
 
     @PostMapping("/validate-phone-number")
     @Operation(summary = "Validate Phone Number")
-    public ResponseEntity<PhoneNumberValidateResponse> checkPhoneNumber(@RequestBody @Valid PhoneNumberValidateRequest request) throws CountryCallingCodeNotFoundException {
+    public ResponseEntity<PhoneNumberValidateResponse> checkPhoneNumber(@RequestBody @Valid PhoneNumberValidateRequest request)
+            throws CountryCallingCodeNotFoundException, CountryCallingCodesNotInitializedException {
         final CountryCallingCodes countryCallingCodes = countryCallingCodesService.findBy(request.getPhoneNumber());
         return ResponseEntity.ok(phoneNumberValidateResponseMapper.mapFrom(countryCallingCodes));
     }

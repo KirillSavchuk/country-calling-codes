@@ -1,6 +1,7 @@
 package lv.savchuk.country.calling.codes.web.error;
 
 import lv.savchuk.country.calling.codes.exception.CountryCallingCodeNotFoundException;
+import lv.savchuk.country.calling.codes.exception.CountryCallingCodesNotInitializedException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +33,16 @@ class ErrorHandlingControllerAdviceTest {
 		final ErrorResponse errorResponse = advice.onCountryCallingCodeNotFoundException(ex);
 
 		assertThat(errorResponse.getErrorMessage()).isEqualTo("Failed to find Country Calling Code for provided 'phoneNumber' phone number.");
+		assertThat(errorResponse.getViolations()).isEmpty();
+	}
+
+	@Test
+	void onCountryCallingCodesNotInitializedException() {
+		final CountryCallingCodesNotInitializedException ex = new CountryCallingCodesNotInitializedException();
+
+		final ErrorResponse errorResponse = advice.onCountryCallingCodesNotInitializedException(ex);
+
+		assertThat(errorResponse.getErrorMessage()).isEqualTo("Country Calling Codes database is not initialized. Please retry later or hire a new developer!");
 		assertThat(errorResponse.getViolations()).isEmpty();
 	}
 

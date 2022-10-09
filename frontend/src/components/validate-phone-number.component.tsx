@@ -49,13 +49,14 @@ export default class ValidatePhoneNumber extends Component<Props, State> {
         CountryCallingCodesApi.validatePhoneNumber(data)
             .then((response: any) => {
                 this.setState({
-                    successResponse: response.data
+                    successResponse: response.data,
+                    failedResponse: null as any
                 });
             })
             .catch((error: AxiosError<ErrorResponse>) => {
-                console.log(error.response?.data as ErrorResponse);
                 this.setState({
-                    failedResponse: error.response?.data as ErrorResponse
+                    failedResponse: error.response?.data as ErrorResponse,
+                    successResponse: null as any
                 });
             });
     }
@@ -122,7 +123,7 @@ export default class ValidatePhoneNumber extends Component<Props, State> {
                             <>
                                 {failedResponse.errorMessage &&
                                     <>
-                                        <h4 className="text-danger">Error Message:</h4>
+                                        <h4 className="text-danger">Error:</h4>
                                         <p>{failedResponse.errorMessage}</p>
                                     </>
                                 }

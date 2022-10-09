@@ -38,6 +38,8 @@ services:
       - "8080:8080"
     networks:
       - frontend-network
+    depends_on:
+      - backend
 
 networks:
   backend-network:

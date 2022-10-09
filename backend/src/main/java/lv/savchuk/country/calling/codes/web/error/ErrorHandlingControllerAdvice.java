@@ -1,6 +1,7 @@
 package lv.savchuk.country.calling.codes.web.error;
 
 import lv.savchuk.country.calling.codes.exception.CountryCallingCodeNotFoundException;
+import lv.savchuk.country.calling.codes.exception.CountryCallingCodesNotInitializedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,6 +20,13 @@ public class ErrorHandlingControllerAdvice {
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(CountryCallingCodeNotFoundException.class)
 	public ErrorResponse onCountryCallingCodeNotFoundException(CountryCallingCodeNotFoundException ex) {
+		return new ErrorResponse(ex.getMessage());
+	}
+
+	@ResponseBody
+	@ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+	@ExceptionHandler(CountryCallingCodesNotInitializedException.class)
+	public ErrorResponse onCountryCallingCodesNotInitializedException(CountryCallingCodesNotInitializedException ex) {
 		return new ErrorResponse(ex.getMessage());
 	}
 

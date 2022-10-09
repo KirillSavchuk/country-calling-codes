@@ -6,6 +6,7 @@ import lv.savchuk.country.calling.codes.db.entities.CountryEntity;
 import lv.savchuk.country.calling.codes.db.repostiory.CountryCallingCodesRepository;
 import lv.savchuk.country.calling.codes.db.repostiory.CountryRepository;
 import lv.savchuk.country.calling.codes.exception.CountryCallingCodeNotFoundException;
+import lv.savchuk.country.calling.codes.exception.CountryCallingCodesNotInitializedException;
 import lv.savchuk.country.calling.codes.model.CountryCallingCodes;
 import lv.savchuk.country.calling.codes.service.mapper.MapperFactory;
 import lv.savchuk.country.calling.codes.service.mapper.impl.FromCountryCallingCodeEntityToCountryCallingCodesMapper;
@@ -31,13 +32,12 @@ class CountryCallingCodesServiceImplTest {
 
 	private CountryCallingCodesService service;
 
-	private MapperFactory mapperFactory;
 	private CountryRepository countryRepository;
 	private CountryCallingCodesRepository countryCallingCodesRepository;
 
 	@BeforeEach
 	void setUp() {
-		this.mapperFactory = initMapperFactory();
+		final MapperFactory mapperFactory = initMapperFactory();
 		this.countryRepository = mock(CountryRepository.class);
 		this.countryCallingCodesRepository = mock(CountryCallingCodesRepository.class);
 		this.service = new CountryCallingCodesServiceImpl(mapperFactory, countryRepository, countryCallingCodesRepository);
@@ -52,13 +52,46 @@ class CountryCallingCodesServiceImplTest {
 	}
 
 	@Test
-	void getAll() {
+	void getAll_dbNotInitialized() {
+		when(countryRepository.findAll()).thenReturn(Collections.emptyList());
+		final CountryCallingCodesNotInitializedException ex = assertThrows(CountryCallingCodesNotInitializedException.class,
+				() -> service.getAll());
+
+		assertThat(ex.getMessage()).isEqualTo("Country Calling Codes database is not initialized. Please retry later or hire a new developer!");
+	}
+
+	@Test
+	void getAll_success() throws CountryCallingCodesNotInitializedException {
+		final CountryEntity countryEntity = new CountryEntity();
+		countryEntity.setName("CountryName");
+		countryEntity.setFlagUrl("FlagUrl");
+		countryEntity.addCodes(List.of(new CountryCallingCodeEntity(111), new CountryCallingCodeEntity(222)));
+
+		when(countryRepository.findAll()).thenReturn(List.of(countryEntity));
+		final List<CountryCallingCodes> countryCallingCodes = service.getAll();
+
+		assertThat(countryCallingCodes).hasSize(1);
+		assertThat(countryCallingCodes.get(0).getName()).isEqualTo("CountryName");
+		assertThat(countryCallingCodes.get(0).getFlagUrl()).isEqualTo("FlagUrl");
+		assertThat(countryCallingCodes.get(0).getCodes()).containsExactly(111, 222);
+	}
+
+	@Test
+	void findByPhoneNumber_dbNotInitialized() {
+		when(countryCallingCodesRepository.findByPhoneNumber(any())).thenReturn(Collections.emptyList());
+		when(countryCallingCodesRepository.count()).thenReturn(0L);
+
+		final CountryCallingCodesNotInitializedException ex = assertThrows(CountryCallingCodesNotInitializedException.class,
+				() -> service.findBy("+37199999"));
+
+		assertThat(ex.getMessage()).isEqualTo("Country Calling Codes database is not initialized. Please retry later or hire a new developer!");
 	}
 
 	@Test
 	void findByPhoneNumber_notFound() {
 		final String invalidPhoneNumber = "+9999999999";
 		when(countryCallingCodesRepository.findByPhoneNumber(any())).thenReturn(Collections.emptyList());
+		when(countryCallingCodesRepository.count()).thenReturn(100L);
 
 		final CountryCallingCodeNotFoundException ex = assertThrows(CountryCallingCodeNotFoundException.class,
 				() -> service.findBy(invalidPhoneNumber));
@@ -67,7 +100,7 @@ class CountryCallingCodesServiceImplTest {
 	}
 
 	@Test
-	void findByPhoneNumber_oneValueFound() throws CountryCallingCodeNotFoundException {
+	void findByPhoneNumber_oneValueFound() throws CountryCallingCodeNotFoundException, CountryCallingCodesNotInitializedException {
 		final String countryName = "Latvia";
 		final String phoneNumber = "+371 123456789";
 		final String adjustedPhoneNumber = "371123456789";
@@ -82,7 +115,7 @@ class CountryCallingCodesServiceImplTest {
 	}
 
 	@Test
-	void findByPhoneNumber_multipleValuesFound() throws CountryCallingCodeNotFoundException {
+	void findByPhoneNumber_multipleValuesFound() throws CountryCallingCodeNotFoundException, CountryCallingCodesNotInitializedException {
 		final int countryCallingCode = 1242;
 		final String countryName = "Bahamas";
 		final String phoneNumber = "+1 242 12345 6789";
@@ -98,10 +131,6 @@ class CountryCallingCodesServiceImplTest {
 		assertThat(result.getCodes()).containsExactly(countryCallingCode);
 		assertThat(result.getName()).isEqualTo(countryName);
 		assertThat(result.getFlagUrl()).isNull();
-	}
-
-	@Test
-	void add() {
 	}
 
 	private CountryCallingCodeEntity createCountryCallingCodeEntity(String countryName, int callingCode) {
