@@ -17,7 +17,6 @@ services:
     image: backend
     build:
       context: ../backend
-      dockerfile: ../backend/Dockerfile
     ports:
       - "8081:8081"
     environment:
@@ -25,11 +24,24 @@ services:
       - spring.datasource.url=jdbc:mysql://database:3306/country_calling_codes_db?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true
     networks:
       - backend-network
+      - frontend-network
     depends_on:
       - database
 
+  frontend:
+    image: frontend
+    build:
+      context: ../frontend
+    volumes:
+      - ../frontend/src:/app/src
+    ports:
+      - "8080:8080"
+    networks:
+      - frontend-network
+
 networks:
   backend-network:
+  frontend-network:
 
 volumes:
   vol_db_mysql:
