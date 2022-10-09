@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DataCleaner implements AppInitializer {
 
-	private static final String ARGUMENT = "clean-db";
+	static final String ARGUMENT = "clean-db";
 
 	private final CountryCallingCodesRepository countryCallingCodesRepository;
 	private final CountryRepository countryRepository;

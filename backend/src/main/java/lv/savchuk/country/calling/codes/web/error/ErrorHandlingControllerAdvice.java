@@ -18,7 +18,7 @@ public class ErrorHandlingControllerAdvice {
 	@ResponseBody
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(CountryCallingCodeNotFoundException.class)
-	public ErrorResponse onConstraintValidationException(CountryCallingCodeNotFoundException ex) {
+	public ErrorResponse onCountryCallingCodeNotFoundException(CountryCallingCodeNotFoundException ex) {
 		return new ErrorResponse(ex.getMessage());
 	}
 

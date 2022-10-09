@@ -1,0 +1,9 @@
+{
+  "parse": {
+    "title": "Wiki Title",
+    "pageid": 12345,
+    "text": {
+      "*": "<h1>HTML</h1>"
+    }
+  }
+}

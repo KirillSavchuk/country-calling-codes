@@ -19,10 +19,6 @@ public class WikiPageDeserializer extends StdDeserializer<WikiPage> {
 		super(vc);
 	}
 
-	public WikiPageDeserializer() {
-		this((Class<?>) null);
-	}
-
 	@Autowired
 	public WikiPageDeserializer(List<WikiPageAttributeMapper<?>> attributeMappers) {
 		this((Class<?>) null);

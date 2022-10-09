@@ -9,12 +9,12 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 @Slf4j
-@Service
 @Order
+@Service
 @RequiredArgsConstructor
 public class CountryCallingCodesInitializer implements AppInitializer {
 
-    private static final String ARGUMENT = "init-country-calling-codes-db";
+    static final String ARGUMENT = "init-country-calling-codes-db";
 
     private final CountryCallingCodesProvider callingCodesProvider;
     private final CountryCallingCodesService service;
