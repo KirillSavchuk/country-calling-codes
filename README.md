@@ -1,7 +1,5 @@
 # Country Calling Codes application
 
-## How to run
-
 ## Initial Task
 
 ### Functional requirements
@@ -38,3 +36,58 @@ For country codes, use the table on the page: https://en.wikipedia.org/wiki/List
 * The appearance of the interface is unimportant, enough neat HTML.
 * For queries, use any AJAX-capable framework, you can just JQuery.
 * Data validation, tests are mandatory.
+
+## How to run
+
+### Tests
+
+In order to run backend tests and view test report, execute `./create-test-report.sh` in `backend` directory.
+
+HTML test report will be generated here:
+
+```
+/backend/target/site/surefire-report.html
+```
+
+### Preparation
+
+Before running all application in Docker, build backed in `backend` directory:
+
+```bash
+mvn clean package
+```
+
+### Docker
+
+All Docker scripts are stored in `docker` directory.
+
+In order to run application, just execute script from `run.sh` file.
+
+Other Docker scripts are explained below:
+
+| Script          | Description                                                             |
+|-----------------|-------------------------------------------------------------------------|
+| run.sh          | Runs whole application, including `database`, `backend` and `frontend`  |
+| run.database.sh | Creates MySQL database instance with `root:root` user under `3036` port |
+| run.backend.sh  | Runs or recreates backend application under `8081` port                 |
+| run.frontend.sh | Runs or recreates fronted application under `8080` port                 |
+| clean.sh        | Cleanups all containers and volumes from `docker-compose.yml`           |
+
+### URLs
+
+* Swagger UI: http://localhost:8081/swagger-ui/index.html
+* List of country calling codes: http://localhost:8080/country-calling-codes
+* Phone Number Info: http://localhost:8080/phone-number-info
+
+## Future work
+
+### Code improvements
+
+#### FrontEnd
+
+* Add RegEx validation for phone number in submit form.
+
+#### BackEnd
+
+* Move `lv/savchuk/country/calling/codes/wiki` package to `country-calling-codes-wiki-provider` module.
+* Setup Allure test report.
