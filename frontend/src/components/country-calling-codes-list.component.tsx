@@ -22,18 +22,18 @@ export default class CountryCallingCodesList extends Component<Props, State> {
         };
     }
 
+    componentDidMount() {
+        this.getCountryCallingCodesList();
+    }
+
     getCountryCallingCodesList() {
         CountryCallingCodesApi.listCountryCallingCodes()
             .then((response: any) => {
-                console.log("S")
-                console.log(response.data as CountryCallingCodesResponse[]);
                 this.setState({
                     successResponse: response.data as CountryCallingCodesResponse[]
                 });
             })
             .catch((error: AxiosError<ErrorResponse>) => {
-                console.log("E")
-                console.log(error.response?.data as ErrorResponse);
                 this.setState({
                     failedResponse: error.response?.data as ErrorResponse
                 });
@@ -42,7 +42,6 @@ export default class CountryCallingCodesList extends Component<Props, State> {
 
     render() {
         const {successResponse, failedResponse} = this.state;
-        this.getCountryCallingCodesList();
 
         return (
             <div className="container">

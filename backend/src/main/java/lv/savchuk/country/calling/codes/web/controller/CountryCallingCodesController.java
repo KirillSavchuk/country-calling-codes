@@ -10,6 +10,7 @@ import lv.savchuk.country.calling.codes.service.mapper.MapperFactory;
 import lv.savchuk.country.calling.codes.web.dto.PhoneNumberValidateRequest;
 import lv.savchuk.country.calling.codes.web.dto.PhoneNumberValidateResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/country-calling-codes")
+@CrossOrigin("http://localhost:8080")
+@RequestMapping("api/v1/country-calling-codes")
 public class CountryCallingCodesController {
 
     private final Mapper<CountryCallingCodes, PhoneNumberValidateResponse> phoneNumberValidateResponseMapper;
