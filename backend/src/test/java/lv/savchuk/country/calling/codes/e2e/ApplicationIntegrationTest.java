@@ -70,7 +70,7 @@ class ApplicationIntegrationTest {
 	void callGetCountryCallingCodesList_returnsAllCountries() {
 		final CountryCallingCodes[] response = RestAssured.given()
 				.when()
-				.get("/country-calling-codes/list")
+				.get("api/v1/country-calling-codes/list")
 				.then().log().all()
 				.and().assertThat().statusCode(HttpStatus.SC_OK)
 				.and().extract().as(CountryCallingCodes[].class);
@@ -157,7 +157,7 @@ class ApplicationIntegrationTest {
 				.when()
 				.body(request)
 				.contentType(ContentType.JSON)
-				.post("/country-calling-codes/validate-phone-number")
+				.post("api/v1/country-calling-codes/validate-phone-number")
 				.then().log().all()
 				.and().assertThat().statusCode(expectedStatusCode)
 				.and().extract().as(responseCls);

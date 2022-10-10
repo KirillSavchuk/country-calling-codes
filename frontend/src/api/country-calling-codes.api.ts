@@ -3,7 +3,7 @@ import ValidatePhoneNumberRequest from "../types/ValidatePhoneNumberRequest.type
 import ValidatePhoneNumberResponse from "../types/ValidatePhoneNumberResponse.type";
 import CountryCallingCodesResponse from "../types/CountryCallingCodesResponse.type";
 
-const BASE_PATH: string = "country-calling-codes";
+const BASE_PATH: string = "api/v1/country-calling-codes";
 
 class CountryCallingCodesApi {
 
