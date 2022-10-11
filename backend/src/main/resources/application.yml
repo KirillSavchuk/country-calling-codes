@@ -1,0 +1,38 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+  flyway:
+    enabled: true
+  jpa:
+    show-sql: true
+    hibernate:
+      naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    serialization:
+      write-empty-json-arrays: false
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: FULL
+
+client:
+  wiki-api:
+    url: https://en.wikipedia.org/w/api.php
+
+springdoc:
+  swagger-ui:
+    config-url: /v3/api-docs/swagger-config
+    url: /v3/api-docs
+    path: /swagger-ui.html
+    groups-order: DESC
+    operationsSorter: method
+    display-request-duration: true
+    disable-swagger-default-url: true
